@@ -1,18 +1,18 @@
 #L10 - This script accepts an access token and prints 
 
 # Prompt for Azure AD credentials
-$credential = Get-Credential -Message "Enter your Azure AD credentials"
+#$credential = Get-Credential -Message "Enter your Azure AD credentials"
 
 # Connect using Azure AD
-Connect-AzureAD -Credential $credential | Out-Null
+#Connect-AzureAD -Credential $credential | Out-Null
 
 # Input user principal name
 #$userPrincipalName = Read-Host "Enter User Principal Name (e.g., user@contoso.com)"
 
 # Input access token
-#$AccessToken = Read-Host "Enter Access Token (e.g. eyJ0eX...)"
+$AccessToken = Read-Host "Enter Access Token (e.g. eyJ0eX...)"
 
-$token = (Get-AzAccessToken).Token
+$token = $AccessToken
 $URI = 'https://management.azure.com/subscriptions?api-version=2020-01-01'
    $RequestParams = @{
        Method  = 'GET'
