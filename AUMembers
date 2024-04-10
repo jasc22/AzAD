@@ -1,0 +1,3 @@
+Get-AzureADMSAdministrativeUnit | ForEach-Object { $AUDisplayName=$_.DisplayName; $AUDesc=$_.Description; Get-AzureADMSScopedRoleMembership -Id $_.Id | ForEach-Object { $Display
+NameR=$_.RoleMemberInfo.DisplayName; $IdR=$_.RoleMemberInfo.Id; $AUDesc=$_.RoleMemberInfo.Description; Get-AzureADDirectoryRole -ObjectId $_.RoleId | ForEach-Object { "$($AUDisplayName),$($DisplayNameR),$(
+$IdR),$($_.DisplayName),$($_.AUDesc),$($_.Description)" } } }
