@@ -1,0 +1,28 @@
+$URI = "https://graph.microsoft.com/v1.0/Applications"
+$RequestParams = @{
+    Method = 'GET'
+    Uri = $URI
+    Headers = @{
+        'Authorization' = "Bearer $GraphAccessToken"
+    }
+}
+$Applications = (Invoke-RestMethod @RequestParams).value
+
+$ApplicationsDetails = [PSCustomObject]@{
+    Applications = @()}
+foreach($Application in $Applications)
+{
+    $applicationObject = [PSCustomObject]@{
+        DisplayName = $Application.displayName
+        AppId = $Application.appId
+        CreatedDateTime = $Application.createdDateTime
+        ID = $Application.id
+        keyCredentials = $Application.keyCredentials
+        passwordCredentials = $Application.passwordCredentials
+    }
+    $ApplicationsDetails.Applications += $applicationObject
+}
+$ApplicationsDetails.Applications
+
+# Save output to a file for later use
+$ApplicationsDetails.Applications | Export-Clixml -Path C:\AzAD\Tools\OilCorpApplications.xml
