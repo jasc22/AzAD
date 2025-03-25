@@ -1,14 +1,14 @@
-$tenantId = "common"  # or your specific tenant
-$clientId = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"  # often from a known client like Azure CLI
-$refreshToken = "your_refresh_token"
-$resource = "https://management.core.windows.net/"  # or Graph
+$refreshToken = "eyJ...your_refresh_token...ABC"
+$clientId     = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
+$tenantId     = "common"
+$scope        = "https://graph.microsoft.com/.default"
 
 $body = @{
-    grant_type    = 'refresh_token'
-    refresh_token = $refreshToken
     client_id     = $clientId
-    resource      = $resource
+    grant_type    = "refresh_token"
+    refresh_token = $refreshToken
+    scope         = $scope
 }
 
-$response = Invoke-RestMethod -Method POST -Uri "https://login.microsoftonline.com/$tenantId/oauth2/token" -Body $body -ContentType "application/x-www-form-urlencoded"
-$response.access_token
+$response = Invoke-RestMethod -Method Post -Uri "https://login.microsoftonline.com/$tenantId/oauth2/v2.0/token" -Body $body -ContentType "application/x-www-form-urlencoded"
+$response
