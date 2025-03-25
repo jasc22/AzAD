@@ -1,5 +1,5 @@
 $tenantId = "common"  # or your specific tenant
-$clientId = "your_client_id"  # often from a known client like Azure CLI
+$clientId = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"  # often from a known client like Azure CLI
 $refreshToken = "your_refresh_token"
 $resource = "https://management.core.windows.net/"  # or Graph
 
