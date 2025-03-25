@@ -1,0 +1,4 @@
+POST https://management.azure.com/subscriptions?api-version=2020-01-01 HTTP/1.1
+Host: management.azure.com
+x-ms-RefreshTokenCredential: eyJ0eXAiOiJKV1QiLCJhbGciOi...<snip>...O8g
+Content-Type: application/json
