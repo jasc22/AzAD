@@ -9,6 +9,5 @@ $Params = @{
 $Body = @{
     "grant_type" = "srv_challenge"
 }
-$Result = Invoke-RestMethod @Params -UseBasicParsing -Body
-$Body
+$Result = Invoke-RestMethod @Params -UseBasicParsing -Body $Body
 $Result.Nonce
