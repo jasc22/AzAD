@@ -1,0 +1,39 @@
+function Get-PlainAzAccessToken {
+    [CmdletBinding()]
+    param(
+        # Use the bare resource URL (no /.default)
+        [Parameter(Mandatory)]
+        [string]$ResourceUrl
+    )
+
+    $t = Get-AzAccessToken -ResourceUrl $ResourceUrl -ErrorAction Stop
+
+    # Newer Az returns PSSecureAccessToken with a SecureString in .Token
+    if ($t.PSObject.Properties.Name -contains 'Token') {
+        $sec = $t.Token
+    } elseif ($t -is [securestring]) {
+        $sec = $t
+    } elseif ($t -is [string]) {
+        return $t
+    } else {
+        throw "Unexpected return type: $($t.GetType().FullName)"
+    }
+
+    # Prefer PS7+ simple conversion if available
+    if (Get-Command ConvertFrom-SecureString -ErrorAction Ignore | Where-Object { $_.Parameters['AsPlainText'] }) {
+        return ConvertFrom-SecureString $sec -AsPlainText
+    }
+
+    # Fallback (works everywhere): Marshal out of SecureString
+    $ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($sec)
+    try   { return [Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr) }
+    finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr) }
+}
+
+# EXAMPLES
+$graphToken = Get-PlainAzAccessToken -ResourceUrl "https://graph.microsoft.com/"
+$armToken   = Get-PlainAzAccessToken -ResourceUrl "https://management.azure.com/"
+
+# Use it
+Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/me" `
+  -Headers @{ Authorization = "Bearer $graphToken" }
